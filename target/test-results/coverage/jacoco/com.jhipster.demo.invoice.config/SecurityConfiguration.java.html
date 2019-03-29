@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Invoice</a> &gt; <a href="index.source.html" class="el_package">com.jhipster.demo.invoice.config</a> &gt; <span class="el_source">SecurityConfiguration.java</span></div><h1>SecurityConfiguration.java</h1><pre class="source lang-java linenums">package com.jhipster.demo.invoice.config;
+
+import com.jhipster.demo.invoice.security.*;
+import com.jhipster.demo.invoice.security.jwt.*;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
+
+@Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@Import(SecurityProblemSupport.class)
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    private final TokenProvider tokenProvider;
+
+    private final SecurityProblemSupport problemSupport;
+
+<span class="fc" id="L28">    public SecurityConfiguration(TokenProvider tokenProvider, SecurityProblemSupport problemSupport) {</span>
+<span class="fc" id="L29">        this.tokenProvider = tokenProvider;</span>
+<span class="fc" id="L30">        this.problemSupport = problemSupport;</span>
+<span class="fc" id="L31">    }</span>
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+<span class="fc" id="L35">        web.ignoring()</span>
+<span class="fc" id="L36">            .antMatchers(HttpMethod.OPTIONS, &quot;/**&quot;)</span>
+<span class="fc" id="L37">            .antMatchers(&quot;/h2-console/**&quot;)</span>
+<span class="fc" id="L38">            .antMatchers(&quot;/swagger-ui/index.html&quot;)</span>
+<span class="fc" id="L39">            .antMatchers(&quot;/test/**&quot;);</span>
+<span class="fc" id="L40">    }</span>
+
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+<span class="fc" id="L44">        http</span>
+<span class="fc" id="L45">            .csrf()</span>
+<span class="fc" id="L46">            .disable()</span>
+<span class="fc" id="L47">            .exceptionHandling()</span>
+<span class="fc" id="L48">            .authenticationEntryPoint(problemSupport)</span>
+<span class="fc" id="L49">            .accessDeniedHandler(problemSupport)</span>
+<span class="fc" id="L50">        .and()</span>
+<span class="fc" id="L51">            .headers()</span>
+<span class="fc" id="L52">            .frameOptions()</span>
+<span class="fc" id="L53">            .disable()</span>
+<span class="fc" id="L54">        .and()</span>
+<span class="fc" id="L55">            .sessionManagement()</span>
+<span class="fc" id="L56">            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)</span>
+<span class="fc" id="L57">        .and()</span>
+<span class="fc" id="L58">            .authorizeRequests()</span>
+<span class="fc" id="L59">            .antMatchers(&quot;/api/**&quot;).authenticated()</span>
+<span class="fc" id="L60">            .antMatchers(&quot;/management/health&quot;).permitAll()</span>
+<span class="fc" id="L61">            .antMatchers(&quot;/management/info&quot;).permitAll()</span>
+<span class="fc" id="L62">            .antMatchers(&quot;/management/**&quot;).hasAuthority(AuthoritiesConstants.ADMIN)</span>
+<span class="fc" id="L63">        .and()</span>
+<span class="fc" id="L64">            .apply(securityConfigurerAdapter());</span>
+
+<span class="fc" id="L66">    }</span>
+
+    private JWTConfigurer securityConfigurerAdapter() {
+<span class="fc" id="L69">        return new JWTConfigurer(tokenProvider);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
