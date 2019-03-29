@@ -13,12 +13,6 @@
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
 
-eureka:
-    client:
-        enabled: false
-    instance:
-        appname: invoice
-        instanceId: invoice:${spring.application.instance-id:${random.value}}
 
 spring:
     application:
@@ -90,7 +84,7 @@ jhipster:
         authentication:
             jwt:
                 # This token must be encoded using Base64 (you can type `echo 'secret-key'|base64` on your command line)
-                base64-secret: YjJlZjJmOWRmNDA3YTQ3NDRiYzY0MTYzMDA1ZDZiZDI0YTY5MzAxNjkyMTY3NGQ4ZWZlNTJmZWZkNTg1OGJlYTY3MDliYzNjMmUxZWVhYThlZDVkM2U1OWRlMGFmMGFmNGM2YjVlNGUyMjAxNDVjY2I1ODRiM2EwOTNhMjc5NTM=
+                base64-secret: YjhmYTM0NjA4NmNhNTYwYmQyOWI5NDFjNmYwZjQ1NTUzM2QxZTQ3YWE0NjIwOWFkYTU4M2EzOWZjOTYzMzY2MTc2NGFmNWQzMzY3NzZmNTc0ZTcxMTFhZDY0NzJlYTcxNjRiODhmMzdlNmE3ODJiNjhkZmJlMWYzMGZhZGU3MDA=
                 # Token is valid 24 hours
                 token-validity-in-seconds: 86400
     metrics:
